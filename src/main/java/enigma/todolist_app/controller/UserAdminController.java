@@ -1,8 +1,10 @@
 package enigma.todolist_app.controller;
 
+import enigma.todolist_app.service.TodoItemService;
 import enigma.todolist_app.service.UserService;
 import enigma.todolist_app.utils.dto.UserDTO;
 import enigma.todolist_app.utils.response.Response;
+import enigma.todolist_app.utils.response.TodoPageResponse;
 import enigma.todolist_app.utils.response.UserPageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserAdminController {
     private final UserService userService;
+    private final TodoItemService todoItemService;
 
     @Value("${superadmin.secret}")
     private String superAdminSecretKey;
@@ -31,6 +35,26 @@ public class UserAdminController {
                 userService.create(req),
                 "User created successfully",
                 HttpStatus.CREATED
+        );
+    }
+
+    @GetMapping("/todos")
+    public ResponseEntity<?> getAll(
+            @PageableDefault(size = 10) Pageable pageable,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String order,
+            Authentication authentication
+    ) {
+        return Response.renderJSON(
+                new TodoPageResponse<>(todoItemService.getAll(pageable, status, sortBy, order, authentication))
+        );
+    }
+
+    @GetMapping("/todos/{id}")
+    public ResponseEntity<?> getOne(@PathVariable Long id, Authentication authentication) {
+        return Response.renderJSON(
+                todoItemService.getOne(id, authentication)
         );
     }
 

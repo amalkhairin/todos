@@ -18,6 +18,6 @@ public class TodoItemDTO {
     private String title;
     private String description;
     private TodoStatus status;
-    private LocalDate dueDate;
+    private LocalDate due_date;
     private LocalDate createdAt;
 }

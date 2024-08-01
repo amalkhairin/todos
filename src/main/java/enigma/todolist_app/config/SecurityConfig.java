@@ -53,8 +53,9 @@ public class SecurityConfig {
 //                        task todo
                         .requestMatchers(HttpMethod.POST, "/api/todos").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/todos").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/admin/todos").access(adminSuperadminAuthorizationManager())
                         .requestMatchers(HttpMethod.GET, "/api/todos/{id}").access(userAuthorizationManager())
-                        .requestMatchers(HttpMethod.PUT, "/api/todos/{id}").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/admin/todos/{id}").access(adminSuperadminAuthorizationManager())
                         .requestMatchers(HttpMethod.PUT, "/api/todos/{id}/status").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/todos/{id}").authenticated()
 

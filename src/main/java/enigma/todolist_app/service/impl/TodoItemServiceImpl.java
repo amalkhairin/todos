@@ -25,13 +25,13 @@ public class TodoItemServiceImpl implements TodoItemService {
 
     @Override
     public TodoItem create(TodoItemDTO req, Authentication auth) {
-        System.out.println(req.getDueDate());
+        System.out.println(req.getDue_date());
         UserEntity user = userService.getByUsername(auth.getName());
         TodoItem todo = TodoItem.builder()
                 .title(req.getTitle())
                 .description(req.getDescription())
                 .status(TodoStatus.PENDING)
-                .dueDate(req.getDueDate())
+                .dueDate(req.getDue_date())
                 .user(user)
                 .build();
         return todoItemRepository.save(todo);
