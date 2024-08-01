@@ -44,10 +44,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
 
 //                        users
-                        .requestMatchers(HttpMethod.POST, "/api/admin").access(adminSuperadminAuthorizationManager())
+                        .requestMatchers(HttpMethod.POST, "/api/admin/users").access(adminSuperadminAuthorizationManager())
                         .requestMatchers("/api/admin/super-admin").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/admin/user").access(adminSuperadminAuthorizationManager())
-                        .requestMatchers(HttpMethod.GET, "/api/admin/user/{id}").access(adminSuperadminAuthorizationManager())
+                        .requestMatchers(HttpMethod.GET, "/api/admin/users").access(adminSuperadminAuthorizationManager())
+                        .requestMatchers(HttpMethod.GET, "/api/admin/users/{id}").access(adminSuperadminAuthorizationManager())
                         .requestMatchers(HttpMethod.PUT, "/api/admin/users/{id}/role").access(adminSuperadminAuthorizationManager())
 
 //                        task todo

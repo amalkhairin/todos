@@ -26,6 +26,7 @@ public class UserAdminController {
 
     @PostMapping("/users")
     public ResponseEntity<?> createAdmin(@Valid @RequestBody UserDTO req) {
+        System.out.println("aaaaaa");
         return Response.renderJSON(
                 userService.create(req),
                 "User created successfully",

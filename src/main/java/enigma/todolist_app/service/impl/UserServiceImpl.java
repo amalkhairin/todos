@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity create(UserDTO req) {
+        System.out.println("bbbb");
         UserEntity user = UserEntity.builder()
                 .username(req.getUsername())
                 .email(req.getEmail())
