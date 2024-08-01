@@ -6,6 +6,7 @@ import enigma.todolist_app.utils.response.Response;
 import enigma.todolist_app.utils.response.UserPageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserAdminController {
     private final UserService userService;
 
+    @Value("${superadmin.secret}")
+    private String superAdminSecretKey;
+    @Value("${admin.secret}")
+    private String adminSecretKey;
+
     @PostMapping("/users")
     public ResponseEntity<?> createAdmin(@Valid @RequestBody UserDTO req) {
         return Response.renderJSON(
@@ -27,8 +33,15 @@ public class UserAdminController {
         );
     }
 
-    @PostMapping("/users/super-admin")
-    public ResponseEntity<?> createSuperAdmin(@Valid @RequestBody UserDTO req) {
+    @PostMapping("/super-admin")
+    public ResponseEntity<?> createSuperAdmin(@Valid @RequestBody UserDTO req, @RequestHeader(value = "X-Super-Admin-Secret-Key") String key) {
+        if (key == null || !key.equals(superAdminSecretKey)) {
+            return Response.renderJSON(
+                    null,
+                    "Invalid Super Admin Secret Key",
+                    HttpStatus.UNAUTHORIZED
+            );
+        }
         return Response.renderJSON(
                 userService.createSuperAdmin(req),
                 "User created successfully",
@@ -53,7 +66,14 @@ public class UserAdminController {
     }
 
     @PutMapping("/users/{id}/role")
-    public ResponseEntity<?> updateRole(@PathVariable Long id, @Valid @RequestBody UserDTO req) {
+    public ResponseEntity<?> updateRole(@PathVariable Long id, @Valid @RequestBody UserDTO req, @RequestHeader(value = "X-Admin-Secret-Key") String key) {
+        if (key == null || !key.equals(adminSecretKey)) {
+            return Response.renderJSON(
+                    null,
+                    "Invalid Admin Secret Key",
+                    HttpStatus.UNAUTHORIZED
+            );
+        }
         return Response.renderJSON(
                 userService.updateRoleAdmin(id, req)
         );

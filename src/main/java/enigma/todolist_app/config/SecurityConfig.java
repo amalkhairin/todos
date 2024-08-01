@@ -17,7 +17,6 @@ import org.springframework.security.web.access.intercept.RequestAuthorizationCon
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.authorization.AuthorizationDecision;
-import org.springframework.security.authorization.method.AuthorizationManagerAfterMethodInterceptor;
 import org.springframework.security.authorization.AuthorityAuthorizationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.cors.CorsConfiguration;
@@ -45,9 +44,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
 
 //                        users
-                        .requestMatchers(HttpMethod.POST, "/api/admin/**").access(adminSuperadminAuthorizationManager())
-                        .requestMatchers(HttpMethod.POST, "/api/admin/users/super-admin").access(adminSuperadminAuthorizationManager())
-                        .requestMatchers(HttpMethod.GET, "/api/admin/**").access(adminSuperadminAuthorizationManager())
+                        .requestMatchers(HttpMethod.POST, "/api/admin").access(adminSuperadminAuthorizationManager())
+                        .requestMatchers("/api/admin/super-admin").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/admin/user").access(adminSuperadminAuthorizationManager())
+                        .requestMatchers(HttpMethod.GET, "/api/admin/user/{id}").access(adminSuperadminAuthorizationManager())
                         .requestMatchers(HttpMethod.PUT, "/api/admin/users/{id}/role").access(adminSuperadminAuthorizationManager())
 
 //                        task todo
