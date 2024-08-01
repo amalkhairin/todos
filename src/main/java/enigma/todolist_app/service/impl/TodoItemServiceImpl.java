@@ -49,13 +49,24 @@ public class TodoItemServiceImpl implements TodoItemService {
     }
 
     @Override
-    public TodoItem getOne(Long id) {
-        return todoItemRepository.findById(id).orElseThrow(() -> new RuntimeException("Todo item not found"));
+    public TodoItem getOne(Long id, Authentication auth) {
+        TodoItem todo = todoItemRepository.findById(id).orElseThrow(() -> new RuntimeException("Todo item not found"));
+        if (auth.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN") || r.getAuthority().equals("ROLE_SUPER_ADMIN"))) {
+            return todo;
+        } else {
+            UserEntity user = userService.getByUsername(auth.getName());
+            if (todo.getUser().getId().equals(user.getId())) {
+                return todo;
+            } else {
+                throw new RuntimeException("Todo item not found");
+            }
+        }
+
     }
 
     @Override
-    public TodoItem update(Long id, TodoItemDTO req) {
-        TodoItem todo = this.getOne(id);
+    public TodoItem update(Long id, TodoItemDTO req, Authentication auth) {
+        TodoItem todo = this.getOne(id, auth);
         todo.setTitle(req.getTitle() != null ? req.getTitle() : todo.getTitle());
         todo.setDescription(req.getDescription() != null ? req.getDescription() : todo.getDescription());
         todo.setStatus(req.getStatus() != null ? req.getStatus() : todo.getStatus());
@@ -63,8 +74,8 @@ public class TodoItemServiceImpl implements TodoItemService {
     }
 
     @Override
-    public void deleteOne(Long id) {
-        TodoItem todo = this.getOne(id);
+    public void deleteOne(Long id, Authentication auth) {
+        TodoItem todo = this.getOne(id, auth);
         todoItemRepository.delete(todo);
     }
 }

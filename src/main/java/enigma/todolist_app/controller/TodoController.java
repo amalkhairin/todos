@@ -42,29 +42,29 @@ public class TodoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOne(@PathVariable Long id) {
+    public ResponseEntity<?> getOne(@PathVariable Long id, Authentication authentication) {
         return Response.renderJSON(
-                todoItemService.getOne(id)
+                todoItemService.getOne(id, authentication)
         );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody TodoItemDTO req) {
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody TodoItemDTO req, Authentication authentication) {
         return Response.renderJSON(
-                todoItemService.update(id, req)
+                todoItemService.update(id, req, authentication)
         );
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<?> updateStatus(@PathVariable Long id, @Valid @RequestBody TodoItemDTO req) {
+    public ResponseEntity<?> updateStatus(@PathVariable Long id, @Valid @RequestBody TodoItemDTO req, Authentication authentication) {
         return Response.renderJSON(
-                todoItemService.update(id, req)
+                todoItemService.update(id, req, authentication)
         );
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteOne(@PathVariable Long id) {
-        todoItemService.deleteOne(id);
+    public ResponseEntity<?> deleteOne(@PathVariable Long id, Authentication authentication) {
+        todoItemService.deleteOne(id, authentication);
         return Response.renderJSON(
                 null,
                 "Todo item deleted successfully",

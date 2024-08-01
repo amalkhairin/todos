@@ -9,9 +9,9 @@ import org.springframework.security.core.Authentication;
 public interface TodoItemService {
     TodoItem create(TodoItemDTO req, Authentication authentication);
     Page<TodoItem> getAll(Pageable pageable, String status, String sortBy, String order, Authentication authentication);
-    TodoItem getOne(Long id);
-    TodoItem update(Long id, TodoItemDTO req);
-    void deleteOne(Long id);
+    TodoItem getOne(Long id, Authentication authentication);
+    TodoItem update(Long id, TodoItemDTO req, Authentication authentication);
+    void deleteOne(Long id, Authentication authentication);
 
 
 }
